@@ -1,5 +1,3 @@
-% arara: pdflatex
-% arara: bibtex
 \documentclass[10pt, reqno]{article}
 \usepackage{amsthm}
 \usepackage[sfdefault]{FiraSans}
@@ -8,7 +6,7 @@
 \usepackage{newtxsf}
 \usepackage{bookmark}
 \usepackage[ocgcolorlinks]{ocgx2}
-\usepackage{mathtools}
+\usepackage{mathtools,mleftright,subdepth}
 \usepackage[nameinlink]{cleveref}
 \usepackage{cite}
 \usepackage[scr=stixtwofancy,bb=stixtwo]{mathalfa}
@@ -16,26 +14,39 @@
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
 
 
 \newcommand{\R}{\mathbb{R}}
-\newcommand{\T}{\mathsf{T}}
+\newcommand{\T}{\mathscr{T}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\X}{\mathscr{X}}
+\renewcommand{\H}{\mathscr{H}}
+\DeclarePairedDelimiter{\dpar}{(\mkern-4mu(}{)\mkern-3.5mu)}
 
+\mleftright
 \begin{document}
-\section{Reproducing Kernel Hilber Spaces}
-We briefly recall the definition.
+\section{Reproducing Kernel Hilbert Spaces}
+We briefly recall some definitions. Throughout this section \(\X\) denotes an arbitrary set
 \begin{definition}
-	Let \(X\) be an arbitrary set, and \(H\) a Hilbert space of real-valued functions on \(X\).
-	We say that \(H\) is a reproducing kernel Hilbert space (RKHS) if, for all \(x\in X\) the evaluation functional \(H\ni f\mapsto f(x)\) is
+	A symmetric function \(k\colon\X\times\X\to\R\) is called a \emph{positive-definite} kernel on \(\X\) if
+	\[
+		\sum_{i=1}^n\sum_{j=1}^nc_ic_jk(x_i,x_j)\ge 0
+	\]
+	holds for any given \(n\in\N\), \(c_1,\dotsc,c_n\in\R\) and \(x_1,\dotsc,x_n\in\X\).
+\end{definition}
+\begin{definition}
+	Let \(\H\) be a Hilbert space of real-valued functions on \(\X\).
+	We say that \(\H\) is a reproducing kernel Hilbert space (RKHS) if, for all \(x\in\X\) the evaluation functional \(\H\ni f\mapsto f(x)\) is
 	continuous.
 \end{definition}
 
-By Riesz's theorem, for every \(x\in X\) there is a unique element \(K_x\in H\) such that \(f(x)=\langle f, K_x\rangle\) for all \(f\in H\).
-Since \(K_x\) is itself an element of \(H\), we see that \(K_x(y)=\langle K_x, K_y\rangle\).
-This allows us to define the \emph{reproducing kernel} of \(H\) by \(k\colon X\times X\to\R\) as
+By Riesz's theorem, for every \(x\in\X\) there is a unique element \(K_x\in\H\) such that \(f(x)=\langle f, K_x\rangle\) for all \(f\in\H\).
+Since \(K_x\) is itself an element of \(\H\), we see that \(K_x(y)=\langle K_x, K_y\rangle\).
+This allows us to define the \emph{reproducing kernel} of \(\H\) by \(k\colon\X\times\X\to\R\) as
 \[
 	k(x,y)\coloneqq \langle K_x,K_y\rangle.
 \]
@@ -43,25 +54,31 @@ One can show that \(k\) must be symmetric and positive definite.
 
 \begin{theorem}[Moore--Aronszajn]
 	\label{thm:MA}
-	Suppose that \(k\) is a symmetric and positive definite kernel on \(X\). There is a unique Hilbert space \(H\) of functions on \(X\) for which \(k\)
+	Suppose that \(k\) is a symmetric and positive definite kernel on \(\X\). There is a unique Hilbert space \(\H\) of functions on \(\X\) for which \(k\)
 	is a reproducing kernel.
 \end{theorem}
 
-The space \(H\) can be expcitly constructed: denote \(K_x\coloneq k(x,\cdot)\) and let \(H^\circ\) be the linear span of \(\{K_x:x\in X\}\). Define an inner product on \(H^\circ\) by
+The space \(\H\) can be expcitly constructed: denote \(K_x\coloneq k(x,\cdot)\) and let \(\H^\circ\) be the linear span of \(\{K_x:x\in\X\}\). Define an inner product on \(\H^\circ\) by
 \[
 	\langle K_x,K_y\rangle=k(x,y).
 \]
-Finally, let \(H\) be the completion of \(H^\circ\) with respect to this inner product.
+Finally, let \(\H\) be the completion of \(\H^\circ\) with respect to this inner product.
+
+
+\begin{example}
+	Consider \(\X=[0,1]\) and the kernel \(k(s,t)=s\wedge t-st\).
+	This kernel is clearly symmetric.
+\end{example}
 
 \subsection{Tensor Hilbert space}
 Let \((\R^d)^{\otimes k}\) denote the \(k\)-fold tensor product of \(\R^d\) with itself, and denote by
 \[
-	\T(\R^d)\coloneqq\prod_{n=0}^\infty( \R^d )^{\otimes k}
+	\mathsf{T}\dpar{\R^d}\coloneqq\prod_{n=0}^\infty( \R^d )^{\otimes k}
 \]
 the (complete) tensor algebra over \(\R^d\), i.e., the space of formal tensor series.
 Denote
 \[
-	\mathscr{T}\coloneqq\left\{ a\in\T:\sum_{n=1}^{\infty}\|a_n\|^2_{(\R^d)^{\otimes k}}<+\infty\right\}.
+	\T\coloneqq\left\{ a\in\mathsf{T}\dpar{\R^d}:\sum_{n=1}^{\infty}\|a_n\|^2_{(\R^d)^{\otimes k}}<+\infty\right\}.
 \]
 For each \(k\), \((\R^d)^{\otimes k}\) becomes a Hilbert space when endowed with the ``natural''\footnote{In the sense that this is the natural way of
 tensoring arbitrary Hilbert spaces.} inner product
@@ -70,32 +87,53 @@ tensoring arbitrary Hilbert spaces.} inner product
 \]
 where \((e_{i}:i=1,\dotsc,d)\) is an ONB of \(\R^d\) and \(e_{i_1\dotsm i_n}\) stands for the tensor product \(e_{i_1}\otimes\dotsm\otimes
 e_{i_n}\).
-Then, \(\mathscr{T}\) can be viewed as the direct sum of these individual Hilbert spaces, and becomes itself a Hilbert space with the product
+Then, \(\T\) can be viewed as the direct sum of these individual Hilbert spaces, and becomes itself a Hilbert space with the product
 \[
 	\langle a,b\rangle\coloneqq\sum_{n=1}\langle a_n,b_n\rangle_{(\R^d)^{\otimes n}}.
 \]
 
 \subsection{The signature kernel}
-Fix \(L\in (0,1)\) and consider the space \(\mathscr{X}\) to be the ball of radius \(L\) in \(BV\).
-Given \(X\in\mathscr{X}\), denote \(\bar{X}_t\coloneqq(X_t,\tfrac{1-L}{2}t)\).
-It can be shown that taking signatures of elements of \(\mathscr{X}\) yields elements in \(\mathscr{T}\), in the sense that for all
-\(X\in\mathscr{X}\) we have that \(S(\bar X)\in\mathscr{T}\).
+Fix \(L\in (0,1)\) and consider the space \(\X\) to be the ball of radius \(L\) in \(BV\).
+Given \(X\in\X\), denote \(\bar{X}_t\coloneqq(X_t,\tfrac{1-L}{2}t)\).
+It can be shown that taking signatures of elements of \(\X\) yields elements in \(\T\), in the sense that for all
+\(X\in\X\) we have that \(S(\bar X)\in\T\).
 
-Now, define on \(\mathscr{X}\) the following kernel:
+Now, define on \(\X\) the following kernel:
 \[
-	k(X,Y)\coloneqq\langle S(\bar X),S(\bar Y)\rangle_{\mathscr{T}}.
+	k(X,Y)\coloneqq\langle S(\bar X),S(\bar Y)\rangle_{\T}.
 \]
 Then, \Cref{thm:MA} yields the following RKHS:
 \[
-	\mathscr{H}=\overline{\left\{ \xi_\alpha\colon\mathscr{X}\to\R\mid\xi_\alpha(X)=\langle \alpha,S(\bar X)\rangle,\alpha\in\mathscr{T} \right\}}
+	\H=\overline{\mathrm{span}\left\{ \xi_\alpha\colon\X\to\R\mid\xi_\alpha(X)=\langle \alpha,S(\bar X)\rangle,\alpha\in\T \right\}}
 \]
-with inner product \(\langle\xi_\alpha,\xi_\beta\rangle_{\mathscr{H}}=\langle \alpha,\beta\rangle_{\mathscr{T}}.\)
+with inner product \(\langle\xi_\alpha,\xi_\beta\rangle_{\N}=\langle \alpha,\beta\rangle_{\T}.\)
 
 \subsection{Relation to CDEs/ResNets}
+\subsubsection{Composition of vector fields}
+Let \(\mathfrak{X}(\R^n)\) denote the space of smooth vector fields \(\R^n\).
+We define the bilinear operator
+\(\triangleleft\colon\mathfrak{X}(\R^n)\times\mathfrak{X}(\R^n)\to\mathfrak{X}(\R^n)\)
+by
+\[
+	(f\triangleleft g)(x)=Dg(x)f(x).
+\]
+We note that this operation is not associative, but it satisfies the left pre-Lie relation:
+considering the associator
+\(a_\triangleleft(f,g,h)\coloneqq f\triangleleft(g\triangleleft h)-(f\triangleleft g)\triangleleft h\),
+we have that it is symmetric in \(f\) and \(g\).
+Indeed
+\begin{align*}
+	a_\triangleleft(f,g,h)&= D^2h(x)(f(x),g(x)) + Dh(x)Dg(x)f(x) - Dh(x)Dg(x)f(x)\\
+	&= D^2h(x)(f(x),g(x)).
+\end{align*}
+We define \(r^{(n)}_\triangleleft(f_1,\dotsc,f_n)\coloneqq f_1\triangleleft r^{(n-1)}_\triangleleft(f_2,\dotsc,f_n)\).
+
 Let \(z\) solve \(\dot z=f(z)\,\mathrm dX\).
 We know that for any \(T>0\), the value of \(z_T\) is well approximated by a linear functional of the signature of \(\bar{X}\), i.e., an element of
-\(\mathscr{H}\), to wit: \( z_T\approx\xi_\alpha(\bar{X}) \) where \(\alpha\in\mathscr{T}\) satisfies
+\(\H\), to wit: \( z_T\approx\xi_\alpha(\bar{X}) \) where \(\alpha\in\T\) satisfies
 \[
-	\langle\alpha, e_{i_1\dotsm i_n}\rangle = \frac{1}{n!}f_{i_1}\circ\dotsm\circ f_{i_n}(z_0).
+	\langle\alpha, e_{i_1\dotsm i_n}\rangle = \frac{1}{n!}r^{(n)}_\triangleleft(f_{i_1},\dotsc,f_{i_n})(z_0).
 \]
 \end{document}
+
+% vim:spell:spelllang=en_us:tw=120
