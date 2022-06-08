@@ -211,16 +211,16 @@ Let \(z\) solve \(\dot z=f(z)\,\mathrm dX\).
 We know that for any small enough \(T>0\) and smooth observable \(\varphi\colon\R^n\to\R^n\), the value of \(\varphi(z_T)\) can be
 well approximated by a Taylor expansion of the form
 \[
-	\varphi(z_T)\approx\sum_{k=0}^N\sum_{i_1,\dotsc,i_k=1}^dr^{(k+1)}_\triangleleft(f_{i_1},\dotsc,f_{i_k},\varphi)(z_0)\bbX^{i_1\dotsm i_k}_{0,T}.
+	\varphi(z_T)\approx\sum_{k=0}^N\sum_{i_1,\dotsc,i_k=1}^dr^{(k+1)}_\triangleleft(f_{i_1},\dotsc,f_{i_k},\varphi)(z_0)S(\bar X)^{i_1\dotsm i_k}_{0,T}.
 \]
 This means that we can get a good approximation by a \emph{linear} functional of the signature, i.e., an element
 \(\xi_\alpha\in\H\), defined by the element \(\alpha\in\T\) given by
 \[
-	\langle \alpha,i_1\dotsm i_k\rangle=r^{(k+1)}_\triangleleft(f_{i_1},\dotsc,f_{i_k},\varphi)(z_0),
+	\langle \alpha,i_1\dotsm i_k\rangle=r^{(k+1)}_\triangleleft(f_{i_1},\dotsc,f_{i_k},\varphi)(z_0)=(f_{i_1}\star\dotsm\star f_{i_k})\triangleleft\varphi(z_0),
 \]
 so that
 \[
-	\varphi(z_T)\approx\langle \xi_\alpha,\bbX\rangle.
+	\varphi(z_T)\approx\xi_\alpha(X).
 \]
 \end{document}
 
