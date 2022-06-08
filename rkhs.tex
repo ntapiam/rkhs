@@ -1,6 +1,6 @@
 \documentclass[10pt, reqno]{article}
 \usepackage{amsthm}
-\usepackage[sfdefault]{FiraSans}
+\usepackage[sfdefault, scaled=0.85]{FiraSans}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{newtxsf}
@@ -10,6 +10,7 @@
 \usepackage[nameinlink]{cleveref}
 \usepackage{cite}
 \usepackage[scr=stixtwofancy,bb=stixtwo]{mathalfa}
+\usepackage{shuffle}
 \usepackage[margin={3cm,2cm}]{geometry}
 
 \theoremstyle{definition}
@@ -21,8 +22,11 @@
 \newtheorem{proposition}{Proposition}
 
 
+\newcommand{\A}{\mathcal{A}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\T}{\mathscr{T}}
+\newcommand{\TT}{\mathsf{T}}
+\renewcommand{\S}{\mathsf{S}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\bbX}{\mathbb{X}}
 \newcommand{\X}{\mathscr{X}}
@@ -222,6 +226,67 @@ so that
 \[
 	\varphi(z_T)\approx\xi_\alpha(X).
 \]
+\clearpage
+\section{Discrete- vs. continuous-time signatures}
+Let \(x\) be a time series in \(\R^d\) with \(T\) steps, and let \(X\colon[0,1]\to\R^d\) be it's linear interpolation.
+We would like to understand the relation between the iterated-sums lift \(\bbX\) of \(x\) and the iterated-integrals
+signature of \(X\).
+
+Recall that \(\bbX\) is a group-like element in the dual of the quasi-shuffle Hopf algebra \(\A\).
+As a vector space, \(\A\) is spanned by words over the free semigroup on \(d\) generators \(\{s_1,\dotsc,s_d\}\).
+The \emph{internal product} on this semigroup is denoted by square brackets.
+Therefore, a typical basis element looks like
+\[
+	[s_{i_1}\dotsm s_{i_n}][s_{j_1}\dotsm s_{j_m}]\dotsm[s_{k_1}\dotsm s_{k_\ell}].
+\]
+The coproduct is the deconcatenation product. The product is recursively given by
+\[
+	(ua*vb)=(u*vb)a+(ua*v)b+(u*v)[ab]
+\]
+for words \(u,v\) and letters \(a,b\).
+
+Then, the iterated-sums lift of \(x\) is computed as follows: for a letter \([s_{i_1}\dots s_{i_n}]\)
+\[
+	\bbX^{[s_{i_1}\dotsm s_{i_n}]}_{k,l}\coloneqq\sum_{j=k}^{l-1}(x^{i_1}_{j+1}-x^{i_1}_j)\dotsm(x^{i_n}_{j+1}-x^{i_n}_j).
+\]
+For a word \(u_1\dotsm u_n\):
+\[
+	\bbX^{u_1\dotsm u_n}_{k,l}\coloneqq\sum_{k\le j_1<\dotsb<j_n<l}\bbX^{u_1}_{k,j_1}\bbX^{u_2}_{j_2,j_2+1}\dotsm\bbX^{u_n}_{j_n,j_n+1}.
+\]
+
+One can define the shuffle algebra over the same vector space, and thus \(\A\) supports both a shuffle and quasi-shuffle
+structure. 
+
+We note that the signature of the linear interpolation \(X\) is a priori only defined in words of the form
+\(s_{i_1}\dotsm s_{i_n}\), i.e., the meaning of \(S(X)^{[s_{i_1}\dotsm s_{i_n}]}\) is undefined, therefore making a
+direct comparison impossible.
+However, we note the following: the shuffle and quasi-shuffle Hopf algebras on \(\A\) are isomorphic, via Hoffman's
+isomorphism, denoted by \(\Phi\colon(\A,\shuffle)\to(\A,*)\).
+
+In order to establish a relation between both lifts, we need to extend \(X\) to an infinite dimensional (!) path \(\hat{X}\), 
+whose components are given by the linear interpolation of the sequences
+\[
+	n\mapsto T^{m-1}\sum_{j=0}^{n-1}(x_{j+1}^{i_1}-x_j^{i_1})\dotsm(x_{j+1}^{i_m}-x_j^{i_m})
+\]
+for all \(i_1,\dotsc,i_m\in\{1,\dotsc,d\}\).
+We have
+\begin{theorem}
+	The relation
+	\[
+		S(\hat{X})^w_{k/T,l/T}=\bbX^{\Phi(w)}_{k,l}.
+	\]
+	holds for all words in \(\A\) and \(k,l\in\{0,\dotsc,N\}\).
+\end{theorem}
+
+In practice this is not very desirable since we cannot put \(\hat{X}\) in a computer, but we can match any truncation of
+\(\bbX\) by adding enough components.
+For example in \(d=1\), for level 2 we require an additional path, so that over the interval \([k/T, (k+1)/T]\) we get
+\[
+	\hat{X}_t = \left(x_{k}+T(t-k/T)(x_{k+1}-x_k), T\sum_{j=0}^{k-1}(x_{j+1}-x_j)^2+T^2(t-k/T)(x_{k+1}-x_k)^2\right).
+\]
+It can easily be checked that for all basis three elements \(s_1, [s_1s_1], s_1s_1\) all the identities hold over this
+interval, keeping in mind that \(\Phi(s_1s_1)=s_1s_1+\tfrac12[s_1s_1]\).
+By Chen's identity, the result holds over any subinterval.
 \end{document}
 
 % vim:spell:spelllang=en_us:tw=120
